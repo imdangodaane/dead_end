@@ -34,12 +34,11 @@ def findPath(maze, start):
     direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     queue = [[start]]
     checked = set(start)
-    way = []
     while queue:
         path = queue.pop(0)
         last_x, last_y = path[-1]
         if (last_x, last_y) == findGoal(maze):
-            way.append(path)
+            return path
 
         for d in direction:
             x, y = last_x + d[0], last_y + d[1]
@@ -49,18 +48,13 @@ def findPath(maze, start):
                ):
                 queue.append(path + [(x, y)])
                 checked.add((x, y))
-    return way
 
 
-available = set()
 start = findStart(maze)
 path = findPath(maze, start)
-for i in path:
-    for ele in i:
-        available.add(ele)
 for y in range(len(maze)):
     for x in range(len(maze[y])):
-        if (x, y) not in available and maze[y][x] == ' ':
+        if (x, y) not in path and maze[y][x] == ' ':
             maze[y] = maze[y][:x] + '*' + maze[y][x+1:]
 for i in maze:
     print(i)
