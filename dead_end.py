@@ -10,6 +10,7 @@ f.close()
 if len(maze[-1]) == 0:
     maze = maze[:-1]
 
+
 def findStart(maze):
     for chr in maze[0]:
         if chr == ' ':
