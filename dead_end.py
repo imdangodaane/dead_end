@@ -7,13 +7,27 @@ f = open(file_name, 'r')
 maze = f.read().split('\n')
 f.close()
 
+if len(maze[-1]) == 0:
+    maze = maze[:-1]
 
 def findStart(maze):
-    return (maze[0].index(' '), 0)
+    for chr in maze[0]:
+        if chr == ' ':
+            return (maze[0].index(chr), 0)
+    for line in maze:
+        if line[0] == ' ':
+            return (0, maze.index(line))
+    # return (maze[0].index(' '), 0)
 
 
 def findGoal(maze):
-    return (maze[len(maze) - 1].index(' '), len(maze) - 1)
+    for chr in maze[-1]:
+        if chr == ' ':
+            return (maze[-1].index(chr), len(maze) - 1)
+    for line in maze:
+        if line[-1] == ' ':
+            return (len(line) - 1, maze.index(line))
+    # return (maze[len(maze) - 1].index(' '), len(maze) - 1)
 
 
 def findPath(maze, start):
