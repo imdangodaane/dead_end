@@ -2,33 +2,39 @@
 import sys
 
 
-file_name = sys.argv[1]
-f = open(file_name, 'r')
-maze = f.read().split('\n')
-f.close()
+if len(sys.argv) != 2:
+    raise IOError('No file included.')
 
-if len(maze[-1]) == 0:
-    maze = maze[:-1]
+
+def readMaze():
+    file_name = sys.argv[1]
+    f = open(file_name, 'r')
+    maze = f.read().split('\n')
+    f.close()
+    for line in maze:
+        if len(line) == 0:
+            maze.remove(line)
+    return maze
 
 
 def findStart(maze):
-    for chr in maze[0]:
-        if chr == ' ':
-            return (maze[0].index(chr), 0)
+    for i in [0, -1]:
+        if ' ' in maze[i]:
+            return (maze[i].index(' '), maze.index(maze[i]))
     for line in maze:
-        if line[0] == ' ':
-            return (0, maze.index(line))
-    # return (maze[0].index(' '), 0)
+        for i in [0, len(line) - 1]:
+            if line[i] == ' ':
+                return (i, maze.index(line))
 
 
-def findGoal(maze):
-    for chr in maze[-1]:
-        if chr == ' ':
-            return (maze[-1].index(chr), len(maze) - 1)
+def findGoal(maze, start):
+    for i in [0, -1]:
+        if ' ' in maze[i] and (maze[i].index(' '), maze.index(maze[i])) != start:
+            return (maze[i].index(' '), maze.index(maze[i]))
     for line in maze:
-        if line[-1] == ' ':
-            return (len(line) - 1, maze.index(line))
-    # return (maze[len(maze) - 1].index(' '), len(maze) - 1)
+        for i in [0, len(line) - 1]:
+            if line[i] == ' ' and (i, maze.index(line)) != start:
+                return (i, maze.index(line))
 
 
 def findPath(maze, start):
@@ -39,7 +45,7 @@ def findPath(maze, start):
     while queue:
         path = queue.pop(0)
         last_x, last_y = path[-1]
-        if (last_x, last_y) == findGoal(maze):
+        if (last_x, last_y) == findGoal(maze, start):
             way.append(path)
 
         for d in direction:
@@ -54,6 +60,7 @@ def findPath(maze, start):
 
 
 available = set()
+maze = readMaze()
 start = findStart(maze)
 path = findPath(maze, start)
 for i in path:
