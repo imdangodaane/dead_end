@@ -2,10 +2,6 @@
 import sys
 
 
-if len(sys.argv) != 2:
-    raise IOError('No file included.')
-
-
 def readMaze():
     file_name = sys.argv[1]
     f = open(file_name, 'r')
@@ -29,7 +25,8 @@ def findStart(maze):
 
 def findGoal(maze, start):
     for i in [0, -1]:
-        if ' ' in maze[i] and (maze[i].index(' '), maze.index(maze[i])) != start:
+        if ' ' in maze[i] and \
+           (maze[i].index(' '), maze.index(maze[i])) != start:
             return (maze[i].index(' '), maze.index(maze[i]))
     for line in maze:
         for i in [0, len(line) - 1]:
@@ -59,6 +56,8 @@ def findPath(maze, start):
     return way
 
 
+if len(sys.argv) != 2:
+    raise IOError('No file included.')
 available = set()
 maze = readMaze()
 start = findStart(maze)
